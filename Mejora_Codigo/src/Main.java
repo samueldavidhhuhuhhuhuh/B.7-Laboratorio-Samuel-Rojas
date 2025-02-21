@@ -1,7 +1,8 @@
-import java.util.InputMismatchException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-// Interface for geometric shapes
+// Interface y clases de figuras (sin cambios)
 interface Shape {
     double calculateArea();
     double calculatePerimeter();
@@ -121,72 +122,9 @@ class Cube implements Shape {
     }
 }
 
-public class Main {
-
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int option = 0;
-        System.out.println("---------- Calculate area and perimeter of shapes -----------");
-
-        while (option != 7) {
-            printMenu();
-
-            try {
-                option = Integer.parseInt(sc.nextLine());
-                Shape shape = null;
-
-                switch (option) {
-                    case 1:
-                        shape = new Rectangle(getInput(sc, "length"), getInput(sc, "width"));
-                        break;
-                    case 2:
-                        shape = new Circle(getInput(sc, "radius"));
-                        break;
-                    case 3:
-                        shape = new Triangle(getInput(sc, "base"), getInput(sc, "height"));
-                        break;
-                    case 4:
-                        shape = new Square(getInput(sc, "side"));
-                        break;
-                    case 5:
-                        shape = new Sphere(getInput(sc, "radius"));
-                        break;
-                    case 6:
-                        shape = new Cube(getInput(sc, "side"));
-                        break;
-                    case 7:
-                        System.out.println("Exiting...");
-                        continue;
-                    default:
-                        System.out.println("Invalid option. Please select between 1 and 7.");
-                        continue;
-                }
-
-                if (shape != null) {
-                    System.out.printf("Area: %.2f\n", shape.calculateArea());
-                    System.out.printf("Perimeter: %.2f\n", shape.calculatePerimeter());
-                }
-
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a valid number.");
-            }
-        }
-
-        sc.close();
-    }
-
-    private static void printMenu() {
-        System.out.println("\n1. Rectangle");
-        System.out.println("2. Circle");
-        System.out.println("3. Triangle");
-        System.out.println("4. Square");
-        System.out.println("5. Sphere");
-        System.out.println("6. Cube");
-        System.out.println("7. Exit");
-        System.out.print("Choose an option: ");
-    }
-
-    private static double getInput(Scanner sc, String dimension) {
+// Clase utilitaria para entrada de datos
+class InputHandler {
+    public static double getInput(Scanner sc, String dimension) {
         System.out.printf("Insert %s: ", dimension);
         while (true) {
             try {
@@ -200,5 +138,89 @@ public class Main {
                 System.out.print("Invalid input. Please enter a number: ");
             }
         }
+    }
+}
+
+// Clase que define los parámetros necesarios por figura
+class DimensionHelper {
+    public static List<String> getDimensions(int option) {
+        switch (option) {
+            case 1: return List.of("length", "width");
+            case 2: return List.of("radius");
+            case 3: return List.of("base", "height");
+            case 4: return List.of("side");
+            case 5: return List.of("radius");
+            case 6: return List.of("side");
+            default: throw new IllegalArgumentException("Invalid option");
+        }
+    }
+}
+
+// Factory para crear instancias de Shape
+class ShapeFactory {
+    public static Shape createShape(int option, List<Double> params) {
+        switch (option) {
+            case 1: return new Rectangle(params.get(0), params.get(1));
+            case 2: return new Circle(params.get(0));
+            case 3: return new Triangle(params.get(0), params.get(1));
+            case 4: return new Square(params.get(0));
+            case 5: return new Sphere(params.get(0));
+            case 6: return new Cube(params.get(0));
+            default: throw new IllegalArgumentException("Invalid option");
+        }
+    }
+}
+
+// Manejo del menú
+class MenuHandler {
+    public static void printMenu() {
+        System.out.println("\n1. Rectangle");
+        System.out.println("2. Circle");
+        System.out.println("3. Triangle");
+        System.out.println("4. Square");
+        System.out.println("5. Sphere");
+        System.out.println("6. Cube");
+        System.out.println("7. Exit");
+        System.out.print("Choose an option: ");
+    }
+}
+
+// Clase principal con flujo refactorizado
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("---------- Calculate area and perimeter of shapes -----------");
+        int option;
+
+        do {
+            MenuHandler.printMenu();
+            try {
+                option = Integer.parseInt(sc.nextLine());
+                if (option == 7) break;
+
+                if (option < 1 || option > 6) {
+                    System.out.println("Invalid option. Please select between 1 and 7.");
+                    continue;
+                }
+
+                List<String> dimensions = DimensionHelper.getDimensions(option);
+                List<Double> params = new ArrayList<>();
+                for (String dim : dimensions) {
+                    params.add(InputHandler.getInput(sc, dim));
+                }
+
+                Shape shape = ShapeFactory.createShape(option, params);
+                System.out.printf("Area: %.2f\n", shape.calculateArea());
+                System.out.printf("Perimeter: %.2f\n", shape.calculatePerimeter());
+
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid number.");
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        } while (true);
+
+        System.out.println("Exiting...");
+        sc.close();
     }
 }
