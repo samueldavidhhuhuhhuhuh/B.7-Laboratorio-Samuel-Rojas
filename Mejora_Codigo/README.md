@@ -32,7 +32,6 @@ Aplicación de consola en Java para calcular el **área** y **perímetro** (o eq
    ```
 
 ### 💻 Ejemplo de interacción:
-```plaintext
 ---------- Calcular área y perímetro de figuras -----------
 
 1. Rectángulo
@@ -46,9 +45,9 @@ Elige una opción: 2
 Introduce el radio: 5
 Área: 78.54
 Perímetro: 31.42
-```
 
 ---
+![EJEMPLO](./EJEMPLO_DE_EJECUCION.png) 
 
 ## 🧱 Estructura de Clases
 | Clase/Componente | Responsabilidad |
@@ -80,100 +79,30 @@ Perímetro: 31.42
 
 ## 🛡️ Manejo de Errores
 ### Entradas Inválidas:
-```plaintext
+![Diagrama de Clases](./Error1.png) 
+
 Introduce la anchura: abc
 Entrada inválida. Por favor, introduce un número válido:
-```
+
 ### Valores No Positivos:
-```plaintext
+![Diagrama de Clases](./Error2.png) 
+
 Introduce el radio: -5
 El valor debe ser positivo. Inténtalo de nuevo:
-```
+
 ### Opciones de Menú Inválidas:
-```plaintext
+![Diagrama de Clases](./Error3.png) 
 Elige una opción: 8
 Opción inválida. Por favor, selecciona entre 1 y 7.
-```
+
 
 ---
 
 ## 📝 Diagrama de Clases
-```mermaid
-classDiagram
-    Shape <|-- Circle
-    Shape <|-- Rectangle
-    Shape <|-- Triangle
-    Shape <|-- Square
-    Shape <|-- Sphere
-    Shape <|-- Cube
-    InputHandler --> Main
-    DimensionHelper --> ShapeFactory
-    ShapeFactory --> Shape
-    MenuHandler --> Main
+![Diagrama de Clases](./Diagrama_Clases.png) 
 
-class Shape {
-    +double calculateArea()
-    +double calculatePerimeter()
-}
-class Circle {
-    -double radius
-    +calculateArea()
-    +calculatePerimeter()
-}
-class Rectangle {
-    -double width
-    -double height
-    +calculateArea()
-    +calculatePerimeter()
-}
-class Triangle {
-    -double base
-    -double height
-    +calculateArea()
-    +calculatePerimeter()
-}
-class Square {
-    -double side
-    +calculateArea()
-    +calculatePerimeter()
-}
-class Sphere {
-    -double radius
-    +calculateArea()
-    +calculatePerimeter()
-}
-class Cube {
-    -double side
-    +calculateArea()
-    +calculatePerimeter()
-}
-class InputHandler {
-    +double getPositiveDouble(String prompt)
-}
-class DimensionHelper {
-    +List<String> getRequiredDimensions(String shapeName)
-}
-class ShapeFactory {
-    +Shape createShape(int option, Map<String, Double> dimensions)
-}
-class MenuHandler {
-    +void showMenu()
-    +int getOption()
-}
-class Main {
-    +main(String[] args)
-}
 ```
 
----
 
-## 🤝 ¿Cómo contribuir?
-### Agregar nuevas figuras:
-1. Crea una nueva clase que implemente `Shape`.
-2. Actualiza `DimensionHelper` y `ShapeFactory`.
 
-### Extender funcionalidades:
-- Añade cálculos de volumen para figuras 3D.
-- Soporta figuras adicionales (por ejemplo, Cilindro, Pirámide).
 
---- 
